@@ -23,8 +23,8 @@ public class CorreiosController {
     }
     @DeleteMapping("/enviar/{id}")
     public ResponseEntity<Void> enviarCorreios(@PathVariable(name = "id") long id) {
-        boolean deleted = correiosService.enviarCorreios(id);
-        if (deleted) {
+        boolean enviado = correiosService.enviarCorreios(id);
+        if (enviado) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
