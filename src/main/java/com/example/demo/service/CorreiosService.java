@@ -11,12 +11,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class CorreiosService {
-    private Map<Long, Correios> correiosMapa; 
+    private Map<Long, Correios> produtosMapa; 
     private AtomicLong proximoId; 
-    private ArrayList<Correios> correios;
+    private ArrayList<Correios> produtos;
     public CorreiosService() {
-        correios = new ArrayList<Correios>();
-        correiosMapa = new HashMap<>();
+        produtos = new ArrayList<Correios>();
+        produtosMapa = new HashMap<>();
         proximoId = new AtomicLong(1);
         if (!fileExists("correios.dat")) {
             createFile("correios.dat");
@@ -28,8 +28,8 @@ public class CorreiosService {
             Object obj;
             while ((obj = ois.readObject()) != null) {
                 if (obj instanceof Correios) {
-                    Correios correio = (Correios) obj;
-                    correios.add(correio);
+                    Correios produto = (Correios) obj;
+                    produtos.add(produto);
                 }
             }
         } catch (EOFException e) {
@@ -50,24 +50,24 @@ public class CorreiosService {
         File file = new File(filename);
         return file.exists();
     }
-    public Correios[] getCorreios() {
-        return correios.toArray(new Correios[correios.size()]);
+    public Correios[] getProdutos() {
+        return produtos.toArray(new Correios[produtos.size()]);
     }
-    public Correios addCorreios(Correios correio) {
+    public Correios addProduto(Correios produto) {
         long id = proximoId.getAndIncrement();
-        correio.setId(id);
-        correiosMapa.put(id, correio);
-        correios.add(correio);
+        produto.setId(id);
+        produtosMapa.put(id, produto);
+        produtos.add(produto);
         recriarMapa();
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("correios.dat"))) {
-            oos.writeObject(correios);
+            oos.writeObject(produtos);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return correio;
+        return produto;
     }
-    public boolean enviarCorreios(long id) {
-        Iterator<Correios> iterator = correios.iterator();
+    public boolean deletarProduto(long id) {
+        Iterator<Correios> iterator = produtos.iterator();
         while (iterator.hasNext()) {
             Correios p = iterator.next();
             if (p.getId() == id) {
@@ -82,28 +82,28 @@ public class CorreiosService {
     private void recriarMapa() {
         Map<Long, Correios> novoMapa = new HashMap<>();
         AtomicLong novoId = new AtomicLong(1);
-        for (Correios p : correios) {
+        for (Correios p : produtos) {
             long id = novoId.getAndIncrement();
             p.setId(id);
             novoMapa.put(id, p);
         }
-        correiosMapa = novoMapa;
+        produtosMapa = novoMapa;
     }
     private void saveToFile() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("correios.dat"))) {
-            for (Correios p : correios) {
+            for (Correios p : produtos) {
                 oos.writeObject(p);
             }
         } catch (IOException e) {
         }
     }
-    public Correios atualizarCorreios(long id, Correios novo) {
-        for (Correios correio : correios) {
-            if (correio.getId() == id) {
-                correio.setNome(novo.getNome());
-                correio.setData(novo.getData());
+    public Correios updateProduto(long id, Correios produtoAtualizado) {
+        for (Correios produto : produtos) {
+            if (produto.getId() == id) {
+                produto.setNome(produtoAtualizado.getNome());
+                produto.setDistancia(produtoAtualizado.getDistancia());
                 saveToFile();
-                return correio;
+                return produto;
             }
         }
         return null;

@@ -1,38 +1,43 @@
 package com.example.demo.entities;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
 public class Correios implements Serializable {
-    protected String nome;
-    protected double data;
+    private String nome;
+    private double distancia;
     private long id;
     public Correios() {
         this.nome = "";
-        this.data = 0;
+        this.distancia = 0;
     }
-    public Correios(String nome, double data) {
+    public Correios(String nome, double distancia) {
         this.nome = nome;
-        this.data = data;
+        this.distancia = distancia;
     }
     @Override
     public String toString() {
-        return id + " - " + nome + " - " + data;
+        return "ID : " + id + " --- " + "NOME : " + nome + " - " + "RASTREADOR DE ENTREGA(KM) : " + distancia;
     }
     public static void main(String[] args) {
+
     }
     public String getNome() {
         return nome;
     }
-    public double getData() {
-        return data;
-    }
-    public long getId() {
-        return id;
+    public double getDistancia() {
+        return distancia;
     }
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public void setData(double data) {
-        this.data = data;
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
+    }
+    public long getId() {
+        return id;
     }
     public void setId(long id) {
         this.id = id;
