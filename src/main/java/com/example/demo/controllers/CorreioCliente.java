@@ -2,7 +2,6 @@ package com.example.demo.controllers;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
